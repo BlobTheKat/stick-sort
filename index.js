@@ -7,7 +7,7 @@ let correct = -1
 const STICK_WIDTH = .015, STICK_SELECT_DIST = 0.03, I_SW = 1/STICK_WIDTH, I_SD = 1/(STICK_WIDTH+STICK_SELECT_DIST)
 const cursorCol = vec4(.3), cursorPressCol = vec4(1)
 let wrongStick = null
-let clickCooldown = 0, hover = null
+let clickCooldown = 0, hover = null, y0 = 0
 
 let level = 0, timeLeft = 0, totalTime = 0, playing = false, madeMistake = false
 let points = 0
@@ -22,12 +22,9 @@ const nextLevel = () => {
 let hovDst = Infinity, t1 = 0
 const drawStick = s => {
 	const c2 = ctx.sub()
-	c2.translate(s.x*(1-t1), s.y*(1-t1))
+	c2.translate(s.x*(1-t1), (s.y+y0)*(1-t1))
 	c2.rotate(s.r + t1*s.dr)
-	if(s == wrongStick){
-		const w1 = s.length + STICK_SELECT_DIST
-		c2.drawRect(-.5*(STICK_WIDTH+STICK_SELECT_DIST), -.5*w1, STICK_WIDTH+STICK_SELECT_DIST, w1, vec4(cursorCol.x,cursorCol.y*(1-clickCooldown),cursorCol.z*(1-clickCooldown),cursorCol.w), w1*I_SD)
-	}else if(!clickCooldown){
+	if(!clickCooldown){
 		const {x, y} = c2.from(cursor), dy = abs(y)-(s.length+STICK_SELECT_DIST)*.5, hv = x*x+(dy>0?dy*dy:0)
 		if(!s.done && hv < hovDst){
 			hover = s, hovDst = hv
@@ -43,8 +40,11 @@ const playW = locus.measure('Click anywhere to play')
 throwSticks(8, .25, .125)
 render = () => {
 	cursorType = 'none'
-	const w = ctx.width/ctx.height
-	ctx.reset(ctx.height/ctx.width, 0, 0, 1, .5, 0)
+	let h0 = min(ctx.width, ctx.height)
+	const w = ctx.width/h0
+	ctx.reset(h0/ctx.width, 0, 0, h0 /= ctx.height, .5, 0)
+	y0 = (1/h0-1)*.5
+	if(wrongStick) ctx.clear(clickCooldown*.5,0,0,1)
 	if(clickCooldown && (clickCooldown -= dt+dt) <= 0){
 		clickCooldown = 0, wrongStick = null
 		if(correct == sortedSticks.length) nextLevel()
@@ -68,7 +68,7 @@ render = () => {
 	if(hover){
 		const c2 = ctx.sub()
 		c2.mask = RGBA | IF_UNSET
-		c2.translate(hover.x*(1-t1), hover.y*(1-t1))
+		c2.translate(hover.x*(1-t1), (hover.y+y0)*(1-t1))
 		c2.rotate(hover.r + t1*hover.dr)
 		const w1 = hover.length + STICK_SELECT_DIST
 		c2.drawRect(-.5*(STICK_WIDTH+STICK_SELECT_DIST), -.5*w1, STICK_WIDTH+STICK_SELECT_DIST, w1, col, w1*I_SD)
@@ -100,7 +100,7 @@ render = () => {
 		let c3 = c2.sub()
 		c3.translate(cos(t)*.1, sin(t)*-.1)
 		locus.draw(c3, title, _, _, vec4(.25,.25,.25,1))
-		locus.draw(c2.sub(), title, _, _, level ? vec4(1,.25,0,1) : vec4.one)
+		locus.draw(c2.sub(), title, _, _, level ? vec4(.8,.1,0,1) : vec4.one)
 		c2.translate(.5*titleW, -6)
 		c2.scale(.5)
 		c2.translate(-.5*playW, 0)
