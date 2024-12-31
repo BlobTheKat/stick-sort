@@ -13,7 +13,7 @@ let level = 0, timeLeft = 0, totalTime = 0, playing = false, madeMistake = false
 let points = 0
 const nextLevel = () => {
 	points += round(timeLeft*level*.3)
-	if(!madeMistake) points += level
+	if(!madeMistake) points += level*2
 	throwSticks(4 + (++level), .25, 2/(12+level))
 	timeLeft = totalTime = 6 + level*.5
 	correct = 0; madeMistake = false
@@ -55,7 +55,7 @@ render = () => {
 	t1 = exp((t0 - t) * 4)
 	if(playing){
 		if(correct < sortedSticks.length && (timeLeft -= dt) < 0){
-			clickCooldown = 1, wrongStick = null, hover = null
+			clickCooldown = 1, wrongStick = null, hover = sortedSticks[correct]
 			if(playing) titleW = locus.measure(title = 'Game over')
 			playing = false; hovDst = -1
 		}else hovDst = Infinity
