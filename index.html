@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#000">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+	<title>&#78844;</title>
+	<link rel="shortcut icon" id="icon" />
+</head>
+<body>
+<script src="gamma/monolith.min.js"></script>
+<script>;{
+	const $ = globalThis
+	let ow = 0, oh = 0
+	$.ctxSupersample = 1
+	Gamma(undefined, $).loop(() => {
+		const s = visualViewport.scale, px = devicePixelRatio * $.ctxSupersample
+		const w = visualViewport.width*s, h = visualViewport.height*s
+		$.pixelRatio = px
+		if(ow!=(ow=round(w*px))|oh!=(oh=round(h*px))) setSize(ow, oh)
+		$.canvas.style.transform = `scale(${1/px})`
+		$.canvas.style.imageRendering = $.pixelRatio>1 ? 'auto' : 'pixelated'
+		cursorType = 'default'
+	})
+	$.pixelRatio = 1
+	const unint = `user-select:none;-webkit-user-select:none;touch-action: none;`
+	$.canvas.style = `position: fixed; inset: 0; transform-origin: 0 0; `+unint
+	$.glLost = () => {
+		$.canvas.replaceWith(document.body = document.createElement('body'))
+		document.body.textContent = 'WebGL2 context lost :('
+		document.body.style = 'color:white;background:#000;text-align:center;line-height:90vh;font-size:32px;font-family:monospace;cursor:normal;'+unint
+	}
+	if(!$.gl) throw $.glLost(), 'Please reload app'
+	document.body.replaceWith($.canvas)
+	
+	$.resolver = (a) => {
+		const url = new URL('.', a.url ?? a.href).href
+		return (src, ...p) => {
+			if(Array.isArray(src)){
+				const a = [src[0]]
+				for(let i = 0; i < p.length;) a.push(p[i], src[++i])
+				src = a.join('')
+			}
+			return src[0]=='/'?src:url+src
+		}
+	}
+	Gamma.input($)
+	Gamma.font($)
+	Gamma.utils($)
+	Gamma.textfield($)
+	let t = '', i = icon, ic = null
+	Object.defineProperties($, {
+		title: {get:()=>t,set:a=>document.title=(t=a+'')||'\ud80c\udffc'},
+		icon: {get:()=>ic,set:a=>i.href=(ic=typeof a=='string'?a:null)||'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg'},
+		[Symbol.toStringTag]: {value: 'Global', writable: false}
+	})
+	icon = null
+	if(!opener) import('./index.js')
+}</script></body>
+</html>
