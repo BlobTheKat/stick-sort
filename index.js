@@ -110,7 +110,7 @@ render = () => {
 	}
 }
 onKey(MOUSE.LEFT, () => {
-	if(!playing && !clickCooldown) return level = 0, nextLevel(), playing = true
+	if(!playing && !clickCooldown) return level = 0, points = 0, nextLevel(), playing = true
 	if(correct >= sortedSticks.length || clickCooldown || !hover) return
 	if(sortedSticks[correct] == hover){
 		hover.color = hover.color.times(.25)
