@@ -37,6 +37,7 @@ ctxSupersample = 2
 icon = './icon.png'
 
 const playW = locus.measure('Click anywhere to play')
+const instrcutionsW = locus.measure('Click sticks in order from smallest to biggest!')
 throwSticks(8, .25, .125)
 render = () => {
 	cursorType = 'none'
@@ -101,11 +102,15 @@ render = () => {
 		c3.translate(cos(t)*.1, sin(t)*-.1)
 		locus.draw(c3, title, _, _, vec4(.25,.25,.25,1))
 		locus.draw(c2.sub(), title, _, _, level ? vec4(.8,.1,0,1) : vec4.one)
-		c2.translate(.5*titleW, -6)
+		c2.translate(.5*titleW, !!level-7)
 		c2.scale(.5)
 		c2.translate(-.5*playW, 0)
 		const a = .3+.1*sin(PI*t)
-		if(!level) locus.draw(c2.sub(), 'Click anywhere to play', _, _, vec4(a,a,a,1))
+		locus.draw(c2.sub(), 'Click anywhere to play', _, _, vec4(a,a,a,1))
+		c2.translate(.5*playW, 0)
+		c2.scale(.5)
+		c2.translate(-.5*instrcutionsW, -2)
+		if(!level) locus.draw(c2.sub(), 'Click sticks in order from smallest to biggest!', _, _, vec4(.2,.8,.2,1))
 		hovDst = -1
 	}
 }
