@@ -14,8 +14,8 @@ let points = 0
 const nextLevel = () => {
 	points += round(timeLeft*level*.3)
 	if(!madeMistake) points += level*2
-	throwSticks(4 + (++level), .25, 2/(12+level))
-	timeLeft = totalTime = 6 + level*.5
+	throwSticks(4 + (++level), .25, 7/(40+level))
+	timeLeft = totalTime = 6 + level*.75
 	correct = 0; madeMistake = false
 }
 

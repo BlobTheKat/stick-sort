@@ -8,9 +8,10 @@ export function throwSticks(count = 0, len = .5, dev = 0.25){
 	let a = len-dev, step = dev*2/(count-1)
 	const zoneBuf = (len+dev) * .5, zoneSize = 1-len-dev
 	let L = .4, lstep = 0.25/count
+	let th = random()*PI2
 	while(count--){
-		const th = random()*PI2
 		const r = cos(th)+1, g = cos(th+.6667*PI)+1, b = cos(th+1.3333*PI)+1
+		th += random()*3-1
 		sticks.push({
 			r: random() * PI2, dr: random() * 2 - 1,
 			done: false, length: a,
